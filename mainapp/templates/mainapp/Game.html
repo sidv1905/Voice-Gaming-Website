@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        {% load static %} 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'mainapp/css/sanke.css' %}">
+</head>
+<body>
+    
+<header>SNAKE</header>
+ 
+<!-- Main table for the snake -->
+<section class="snakeTable"></section>
+
+<!-- modular window before and after games -->
+<section class="modul hidden">
+  <div class="start">
+    <span>Play Snake</span>
+  </div>
+</section>
+
+<script src="{% static 'mainapp/js/snake.js' %}"></script>
+</body>
+</html>

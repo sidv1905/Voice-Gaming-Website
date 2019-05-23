@@ -1,0 +1,44 @@
+.navbar-fixed {
+    position: absolute;
+    z-index: 999999999;
+  }
+
+nav ul li a{
+    color: black;
+  }    
+  .brand-logo{
+    color: black;
+  }
+body{
+    background: url('/static/mainapp/img/back1.jpg');
+    background-repeat: no-repeat;
+    background-attachment:fixed;
+    background-position: center;
+    background-size:cover;
+    height:1000px;
+}
+#image2{
+    background: url('/static/mainapp/img/back2.jpg');
+    background-repeat: no-repeat;
+    background-attachment:fixed;
+    background-position: center;
+    background-size:cover;
+    height:600px;
+
+}
+#image3{
+    background: url('/static/mainapp/img/back3.jpg');
+    background-repeat: no-repeat;
+    background-attachment:fixed;
+    background-position: center;
+    background-size:cover;
+    height:600px;
+
+}
+#boxer{
+    background-color: rgba(255, 255, 255, 0.644);
+  color: inherit;
+  border:0.1px solid;
+  border-color: antiquewhite;
+  border-radius: 1px;
+}
