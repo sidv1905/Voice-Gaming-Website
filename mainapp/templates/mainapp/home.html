@@ -26,10 +26,10 @@
                         <a href="#" data-activates="mobile-demo" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
                         <a href="https://codepen.io/collection/nbBqgY/" class="brand-logo" target="_blank">Voice Gaming</a>
                         <ul class="right hide-on-med-and-down ">
-                                <li ><a class="linker" href="{% url 'login' %}" >Login</a></li>
-                                <li><a class="linker" href="{% url 'registration' %}">Register</a></li>
+                                <li ><a id='loginkar' class="linker" href="{% url 'login' %}" >Login</a></li>
+                                <li><a id="registerkar" class="linker" href="{% url 'registration' %}">Register</a></li>
                                 {% if request.session.loggedin %}
-                                <li><a class="linker" href="{% url 'logout' %}">Logout</a></li>
+                                <li><a id="logoutkar" class="linker" href="{% url 'logout' %}">Logout</a></li>
                                 {% else %}
                                 {% endif %}
                               </ul>
@@ -50,7 +50,7 @@
          
         </div>
         <div class="row center">
-          <a href="{% url 'game' %}" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Play Games</a>
+          <a href="{% url 'game' %}" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Play Game</a>
         </div>
         <br><br>
 
@@ -169,7 +169,63 @@
       </div>
     </div>
   </footer>
-
+  <script>
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+    var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+    var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+    var colors = [ 'left','up','right','down' ];
+    var grammar = '#JSGF V1.0; grammar colors; public <color> = ' + colors.join(' | ') + ' ;'
+    
+    var recognition = new SpeechRecognition();
+    var speechRecognitionList = new SpeechGrammarList();
+    var diagnostic = document.querySelector('.output');
+    speechRecognitionList.addFromString(grammar, 1);
+    
+    recognition.grammars = speechRecognitionList;
+    recognition.continuous = true;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    
+    document.body.onload = function() {
+      recognition.start();
+      console.log('Ready to receive a command.');
+    }
+   
+ 
+    
+    
+    recognition.onresult = function(event) {
+      var last = event.results.length - 1;
+      var color = event.results[last][0].transcript;
+      console.log(color);
+      if(color=='login'|| color==' login'){
+        document.getElementById("loginkar").click(); 
+      }
+      else if(color=='logout' || color==' logout')
+      {
+        document.getElementById("logoutkar").click(); 
+      }
+      else if(color=='register'|| color==' register')
+      {
+        document.getElementById("registerkar").click(); 
+      }
+      else if(color=='play'|| color==' play'|| color=="play game")
+      {
+        document.getElementById("download-button").click(); 
+      }
+      
+    
+      console.log('Confidence: ' + event.results[0][0].confidence);
+    }
+    recognition.onend = function() {
+       recognition.start();
+        console.log("give more taz");
+    }
+   
+      
+  
+    </script>
 
   <!--  Scripts-->
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>

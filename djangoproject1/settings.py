@@ -74,17 +74,20 @@ WSGI_APPLICATION = 'djangoproject1.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'djangomainapp',
-        'HOST': 'mongodb+srv://m220student:siddharth@mflix-xzslm.mongodb.net/test?retryWrites=true',
-        'USER': 'm220student',
-        'PASSWORD': 'siddharth',
+        'default': {
+            'ENGINE': 'djongo',
+            'ENFORCE_SCHEMA': True,
+            'NAME': 'djangomainapp',
+            'HOST': 'mongodb://m220student:<password>@mflix-shard-00-00-xzslm.mongodb.net:27017,mflix-shard-00-01-xzslm.mongodb.net:27017,mflix-shard-00-02-xzslm.mongodb.net:27017/test?ssl=true&replicaSet=mflix-shard-0&authSource=admin&retryWrites=true&w=majority',
+            'PORT': 27017,
+            'USER': 'm220student',
+            'PASSWORD': 'siddharth',
 
+        }
     }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

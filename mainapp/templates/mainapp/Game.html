@@ -5,23 +5,300 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Rock paper scissor</title>
     <link rel="stylesheet" type="text/css" href="{% static 'mainapp/css/sanke.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="{% static 'mainapp/js/snake.js' %}"></script>
 </head>
 <body>
+    <!-- STARTING SCREEN -->
+<header class="main-header">
+
+    <div class="container">
+
+        <h1>
+            <span>Rock,</span>
+            <span>Paper,</span>
+            <span>Scissors</span>
+        </h1>
+
+        <p class="intro">An Epic battle of Human Vs. Computer</p>
+
+    </div>
+
+    <div class="starter-screens">
+
+        <!-- START -->
+        <div class="starter-screen start">
+
+            <div class="medium-container">
+
+                <button id="starter" type="button" class="start button">Start</button>
+
+            </div>
+
+        </div>
+
+        <!-- HOW MANY ROUNDS -->
+        <div class="starter-screen choose-rounds">
+
+            <div class="medium-container">
+
+                <h2>How many rounds would you like to play?</h2>
+
+                <ul>
+                    <li id="three" class="button" data-rounds="3" role="button"><span>3</span></li>
+                    <li id="five" class="button" data-rounds="5" role="button"><span>5</span></li>
+                    <li id="nine" class="button" data-rounds="9" role="button"><span>9</span></li>
+                    <li id="fifteen" class="button" data-rounds="15" role="button"><span>15</span></li>
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div class="starter-screen choose-character">
+
+            <div class="medium-container">
+
+                <h2>Choose your character</h2>
+
+                <ul>
+                    <li id="fluff" role="button" class="character1" data-character="character1"><span>Fluff fluff</span></li>First
+                    <li id="squidgy" role="button" class="character2" data-character="character2"><span>Squidgy</span></li>Second
+                    <li id="timmy" role="button" class="character3" data-character="character3"><span>Timmy</span></li>Third
+                </ul>
+
+            </div>
+
+        </div>
+
+        <!-- CHARACTERS -->
+        <div class="starter-screen choose-rival">
+
+            <div class="medium-container">
+
+                <h2>Choose your rival:</h2>
+
+                <ul>
+                    <li id="eugene" role="button" class="robot1" data-character="robot1"><span>Eugene</span></li>Easy
+                    <li id="ada" role="button" class="robot2" data-character="robot2"><span>Ada</span></li>Medium
+                    <li id="turing" role="button" class="robot3" data-character="robot3"><span>Turing</span></li>Hard
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+<main>
+
+    <div class="container container-collapse">
+
+        <div class="play-area">
+
+            <!-- PLAYER & COMPUTER ICON -->
+            <div class="players">
+
+                <div class="player-info">
+                    <div class="player-character"></div>
+                    <p>Score: <span class="player-score">0</span></p>
+                </div>
+
+                <span>Vs.</span>
+
+                <div class="player-info">
+                    <div class="computer-character"></div>
+                    <p>Score: <span class="computer-score">0</span></p>
+                </div>
+
+            </div>
+
+            <!-- ROUND -->
+            <div class="round-wrap">
+                <p>Round: <span class="round">1</span>/<span class="best-of"></span></p>
+            </div>
+
+            <!-- PLAY ARENA -->
+            <div class="arena">
+
+                <div class="player-chip">
+                    <h3>Your choice</h3>
+                    <span class="player-choice"></span>
+                    <div class="player-choice-icon"></div>
+                </div>
+
+                <div class="computer-chip">
+                    <h3>Computer choice</h3>
+                    <span class="computer-choice"></span>
+                    <div class="computer-choice-icon"></div>
+                </div>
+
+                <!-- CHOOSE WEAPON -->
+                <div class="weapon">
+
+                    <div class="weapon-inner">
+
+                        <h3>Choose your weapon</h3>
+
+                        <ul>
+                            <li id='rocker' class="rock" role="button" data-weapon="rock"><span>Rock</span></li>
+                            <li id='paperer' class="paper" role="button" data-weapon="paper"><span>Paper</span></li>
+                            <li id='scisorrer' class="scissors" role="button" data-weapon="scissors"><span>Scissors</span></li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <!-- ROUND RESULTS -->
+                <div class="result">
+
+                    <div class="result-inner">
+
+                        <h3 class="winner"></h3>
+                        <button id="playagain" class="play-again button">Play again</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<!-- END SCREEN -->
+<section class="end-screen">
+
+    <div class="medium-container">
+
+        <div class="end-result"></div>
+
+        <div class="rounds-end-screen">
+
+            <h3>Would you like a rematch? How many rounds do you want to play?</h3>
+
+            <ul>
+                <li class="button rounds-3" data-rounds="3" role="button"><span>3</span></li>
+                <li class="button rounds-5" data-rounds="5" role="button"><span>5</span></li>
+                <li class="button rounds-9" data-rounds="9" role="button"><span>9</span></li>
+                <li class="button rounds-15" data-rounds="15" role="button"><span>15</span></li>
+            </ul>
+
+        </div>
+
+        <button class="reset button">Rematch</button>
+
+    </div>
     
-<header>SNAKE</header>
- 
-<!-- Main table for the snake -->
-<section class="snakeTable"></section>
-
-<!-- modular window before and after games -->
-<section class="modul hidden">
-  <div class="start">
-    <span>Play Snake</span>
-  </div>
+    <script>
+            var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+            var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+            var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+            var colors = [ 'left','up','right','down' ];
+            var grammar = '#JSGF V1.0; grammar colors; public <color> = ' + colors.join(' | ') + ' ;'
+            
+            var recognition = new SpeechRecognition();
+            var speechRecognitionList = new SpeechGrammarList();
+            var diagnostic = document.querySelector('.output');
+            speechRecognitionList.addFromString(grammar, 1);
+            
+            recognition.grammars = speechRecognitionList;
+            recognition.continuous = true;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+            
+            document.body.onload = function() {
+              recognition.start();
+              console.log('Ready to receive a command.');
+            }
+           
+         
+            
+            
+            recognition.onresult = function(event) {
+              var last = event.results.length - 1;
+              var color = event.results[last][0].transcript;
+              console.log(color);
+              if(color=='rock'|| color==' rock'){
+                document.getElementById("rocker").click(); 
+              }
+              else if(color=='paper' || color==' paper')
+              {
+                document.getElementById("paperer").click(); 
+              }
+              else if(color=='scissor'|| color==' scissor')
+              {
+                document.getElementById("scisorrer").click(); 
+              }
+              else if(color=='start'|| color==' start')
+              {
+                document.getElementById("starter").click(); 
+              }
+              else if(color=='three'|| color==' three' || color=='3'|| color==' 3')
+              {
+                document.getElementById("three").click(); 
+              }
+              else if(color=='five'|| color==' five'|| color=='5'|| color==' 5')
+              {
+                document.getElementById("five").click(); 
+              }
+              else if(color=='nine'|| color==' nine'|| color=='9'|| color==' 9')
+              {
+                document.getElementById("nine").click(); 
+              }
+              else if(color=='fifteen'|| color==' fifteen'|| color=='15'|| color==' 15')
+              {
+                document.getElementById("fifteen").click(); 
+              }
+              else if(color=='first'|| color==' first')
+              {
+                document.getElementById("fluff").click(); 
+              }
+              else if(color=='second'|| color==' second')
+              {
+                document.getElementById("squidgy").click(); 
+              }
+              else if(color=='third'|| color==' third')
+              {
+                document.getElementById("starter").click(); 
+              }
+              else if(color=='easy'|| color==' easy')
+              {
+                document.getElementById("eugene").click(); 
+              }
+              else if(color=='medium'|| color==' medium')
+              {
+                document.getElementById("ada").click(); 
+              }
+              else if(color=='hard'|| color==' hard')
+              {
+                document.getElementById("turing").click(); 
+              }
+              else if(color=='play again'|| color==' play again')
+              {
+                document.getElementById("playagain").click(); 
+              }
+              
+            
+              console.log('Accuracy: ' + event.results[0][0].confidence);
+            }
+            recognition.onend = function() {
+               recognition.start();
+                console.log("give more Commands");
+            }
+           
+              
+          
+            </script>
 </section>
-
-<script src="{% static 'mainapp/js/snake.js' %}"></script>
 </body>
 </html>

@@ -1,349 +1,313 @@
+var gameModule = (function () {
 
-// ADD time?
-// increase speed over time/food
+    $(function() {
 
-var snakeTable = document.querySelector(".snakeTable");
-var boxes = document.getElementsByClassName("box");
-var modul = document.querySelector(".modul");
-var start = document.querySelector(".start");
+        // General variables
+        var playerChoice,
+            computerChoice,
+            winner,
+            round = 1,
+            playerScore = 0,
+            computerScore = 0,
+            bestOf,
+            overallResultClass,
+            overallResultText,
+            character,
+            choices = ['rock', 'paper', "scissors"];
 
-var table = {
-  rowsCols: 21,
-  boxes: 21*21
-};
+        // Text Variables
+        var playerWinsText = "You win the round!",
+            computerWinsText = "Computer wins the round!",
+            tieText = "It's a Tie!",
+            overallPlayerWinText = "<h2>Well Done!</h2> <p>You won against the computer.</p>",
+            overallComputerWinText = "<h2>You Lose...</h2> <p>The computer has defeated you</p>",
+            overallTieText = "<h2>It's a draw!</h2> <p>Good effort.</p>";
 
-var snake = {
-  direction: "right",
-  position: [[6,10], [7,10], [8,10], [9,10], [10,10]],
-  speed: 200,
-  score: 0,
-  final: 0,
-  time: 0,
-  canTurn: 0,
-  init: function() {
-    snake.direction = "right";
-    snake.position = [[6,10], [7,10], [8,10], [9,10], [10,10]];
-    snake.speed = 200;
-    snake.score = 0;
-    snake.time = 0;
-    snake.canTurn = 0;
-    snakeTable.innerHTML = "";
-    tableCreation();
-  }
-};
-
-// init game
-snake.init();
-
-start.addEventListener("click", startSnake);
-
-document.addEventListener("keydown", function(e) {
-  if (e.keyCode === 13 && snake.time === 0) {
-    startSnake();
-  }
-});
-
-// start game
-function startSnake() {
-  modul.classList.add("hidden");
-  clearInterval(checkPageInterval);
-  snake.time = 1;
-  renderSnake();
-  randomFood();
-  // interval, heart of the game
-  setInt = setInterval(function() {
-    move();
-  }, snake.speed);
-}
-
-// end of game
-function stopp() {
-  clearInterval(setInt);
-  snake.final = snake.score;
-  start.querySelector("span").innerHTML = snake.final + " Points !";
-  setTimeout(function() {
-    start.querySelector("span").innerHTML = "Play Snake";
-  }, 800);
-  snake.init();
-  modul.classList.remove("hidden");
-}
-
-// move the snake function
-function move() {
-  // check if move allowed & then eat food
-  hitFood();
-  hitBorder();
-  hitSnake();
-  // actually move the snake
-  updatePositions();
-  renderSnake();
-  document.addEventListener("keydown", turn);
-  snake.canTurn = 1;
-}
-
-function updatePositions() {
-  // remove last snake part (first snake pos)
-  boxes[snake.position[0][0] + snake.position[0][1] * table.rowsCols].classList.remove("snake");
-  snake.position.shift();
-  // add new snake part
-  var head = snake.position[snake.position.length - 1];
-  switch (snake.direction) {
-    case "left":
-      snake.position.push([head[0] - 1, head[1]]);
-      break;
-    case "up":
-      snake.position.push([head[0], head[1] - 1]);
-      break;
-    case "right":
-      snake.position.push([head[0] + 1, head[1]]);
-      break;
-    case "down":
-      snake.position.push([head[0], head[1] + 1]);
-      break;
-    default:
-      console.log("no direction !");
-  }
-}
-
-// checks border contact
-function hitBorder() {
-  var headPos = snake.position.length-1;
-  // goes of limits
-  if (((snake.position[headPos][0] === table.rowsCols-1) && (snake.direction === "right")) || ((snake.position[headPos][0] === 0) && (snake.direction === "left")) || ((snake.position[headPos][1] === table.rowsCols-1) && (snake.direction === "down")) ||  ((snake.position[headPos][1] === 0) && (snake.direction === "up"))) {
-    // console.log("border hit");
-    stopp();
-  }
-}
-
-// checks self contact
-function hitSnake() {
-  var headPos = snake.position.length-1;
-  for (var i=0; i<headPos; i++) {
-    if (snake.position[headPos].toString() === snake.position[i].toString()) {
-      // console.log("snake hit");
-      stopp();
-    }
-  } 
-}
-
-// checks food contact
-function hitFood() {
-  var head = snake.position[snake.position.length-1];
-  var tail = snake.position[0];
-  if (head.toString() === foodPos.toString()) {
-    boxes[random].classList.remove("food");
-    snake.position.unshift(tail);
-    randomFood();
-    snake.score += 10;
-    scoreElt.innerHTML = snake.score + " pts";
-  }
-}
-
-// random 'food'
-function randomFood() {
-  var randomX = Math.floor(Math.random() * table.rowsCols);
-  var randomY = Math.floor(Math.random() * table.rowsCols);
-  random = randomX + randomY * table.rowsCols;
-  // picks another foodPos if food pops on snake
-  while (boxes[random].classList.contains("snake")) {
-    randomX = Math.floor(Math.random() * table.rowsCols);
-    randomY = Math.floor(Math.random() * table.rowsCols);
-    random = randomX + randomY * table.rowsCols;
-  }  
-  boxes[random].classList.add("food");
-  foodPos = [randomX, randomY];
-}
-
-// read positions and render the snake
-function renderSnake() {
-  for (var i=0; i<snake.position.length; i++) {
-    boxes[snake.position[i][0] + snake.position[i][1] * table.rowsCols].classList.add("snake");
-  }
-}
-
-// keypress handling to turn
-function turn(e) {
-  if (snake.canTurn) {
-    switch (e.keyCode) {
-      case 13:
-        // document.removeEventListener()
-        break;
-      case 37:// left
-        if (snake.direction === "right") return;
-        snake.direction = "left";
-        break;
-      case 38:// up
-        if (snake.direction === "down") return;
-        snake.direction = "up";
-        break;
-      case 39:// right
-        if (snake.direction === "left") return;
-        snake.direction = "right";
-        break;
-      case 40:// down
-        if (snake.direction === "up") return;
-        snake.direction = "down";
-        break;
-      default:
-        console.log("wrong key");
-    }
-    snake.canTurn = 0;
-  }
-}
-
-// table creation
-function tableCreation() {
-  if (snakeTable.innerHTML === "") {
-    // main table
-    for (var i = 0; i<table.boxes; i++) {
-      var divElt = document.createElement("div");
-      divElt.classList.add("box");
-      snakeTable.appendChild(divElt);
-    }
-    // status bar
-    var statusElt = document.createElement("div");
-    statusElt.classList.add("status");
-    snakeTable.appendChild(statusElt);
-    scoreElt = document.createElement("span");
-    scoreElt.classList.add("score");
-    scoreElt.innerHTML = snake.score + " pts";
-    statusElt.appendChild(scoreElt);
-  }
-}
-
-// handle focus of the page
-function checkPageFocus() {
-  if (document.hasFocus()) {
-    modul.classList.remove("hidden");
-  }
-  else {
-    modul.classList.add("hidden");
-  }
-}
-var checkPageInterval = setInterval(checkPageFocus, 300);
-
-// swipe Showcase
-$("document").ready(function() {
-  $("body")
-    .swipeDetector()
-    .on("swipeLeft.sd swipeRight.sd swipeUp.sd swipeDown.sd", function(event) {
-      if (event.type === "swipeLeft") {
-        if (snake.direction === "right") return;
-        snake.direction = "left";
-      } else if (event.type === "swipeRight") {
-        if (snake.direction === "left") return;
-        snake.direction = "right";
-      } else if (event.type === "swipeUp") {
-        if (snake.direction === "down") return;
-        snake.direction = "up";
-      } else if (event.type === "swipeDown") {
-        if (snake.direction === "up") return;
-        snake.direction = "down";
-      }
-      snake.canTurn = 0;
-    });
-});
-
-// swipe function --> credit: https://codepen.io/AlexEmashev/pen/BKgQdx?editors=0100
-(function($) {
-  $.fn.swipeDetector = function(options) {
-    // States: 0 - no swipe, 1 - swipe started, 2 - swipe released
-    var swipeState = 0;
-    // Coordinates when swipe started
-    var startX = 0;
-    var startY = 0;
-    // Distance of swipe
-    var pixelOffsetX = 0;
-    var pixelOffsetY = 0;
-    // Target element which should detect swipes.
-    var swipeTarget = this;
-    var defaultSettings = {
-      // Amount of pixels, when swipe don't count.
-      swipeThreshold: 30,
-      // Flag that indicates that plugin should react only on touch events.
-      // Not on mouse events too.
-      useOnlyTouch: true
-    };
-
-    // Initializer
-    (function init() {
-      options = $.extend(defaultSettings, options);
-      // Support touch and mouse as well.
-      swipeTarget.on("mousedown touchstart", swipeStart);
-      $("html").on("mouseup touchend", swipeEnd);
-      $("html").on("mousemove touchmove", swiping);
-    })();
-
-    function swipeStart(event) {
-      if (options.useOnlyTouch && !event.originalEvent.touches) return;
-
-      if (event.originalEvent.touches) event = event.originalEvent.touches[0];
-
-      if (swipeState === 0) {
-        swipeState = 1;
-        startX = event.clientX;
-        startY = event.clientY;
-      }
-    }
-
-    function swipeEnd(event) {
-      if (swipeState === 2) {
-        swipeState = 0;
-
-        if (
-          Math.abs(pixelOffsetX) > Math.abs(pixelOffsetY) &&
-          Math.abs(pixelOffsetX) > options.swipeThreshold
-        ) {
-          // Horizontal Swipe
-          if (pixelOffsetX < 0) {
-            swipeTarget.trigger($.Event("swipeLeft.sd"));
-          } else {
-            swipeTarget.trigger($.Event("swipeRight.sd"));
-          }
-        } else if (Math.abs(pixelOffsetY) > options.swipeThreshold) {
-          // Vertical swipe
-          if (pixelOffsetY < 0) {
-            swipeTarget.trigger($.Event("swipeUp.sd"));
-          } else {
-            swipeTarget.trigger($.Event("swipeDown.sd"));
-          }
+        // Set Characters
+        function setCharacter(div, className) {
+            character = $(div).data('character');
+            $(className).addClass(character);
         }
-      }
-    }
 
-    function swiping(event) {
-      // If swipe don't occuring, do nothing.
-      if (swipeState !== 1) return;
+        function nextScreen(div) {
+            div.parents('.starter-screen').hide().next().addClass('animate-in');
+        }
 
-      if (event.originalEvent.touches) {
-        event = event.originalEvent.touches[0];
-      }
+        // Decides on whether the computer is playing rock, paper or scissors
+        function computerDecision() {
 
-      var swipeOffsetX = event.clientX - startX;
-      var swipeOffsetY = event.clientY - startY;
+            var randomChoice = Math.floor(Math.random() * choices.length);
+            return choices[randomChoice];
 
-      if (
-        Math.abs(swipeOffsetX) > options.swipeThreshold ||
-        Math.abs(swipeOffsetY) > options.swipeThreshold
-      ) {
-        swipeState = 2;
-        pixelOffsetX = swipeOffsetX;
-        pixelOffsetY = swipeOffsetY;
-      }
-    }
+        }
 
-    return swipeTarget; // Return element available for chaining.
-  };
-})(jQuery);
+        // Plays the game
+        function playGame(playerChoice) {
 
-// remove scroll for mobile IOS issue
-function preventDefault(e){e.preventDefault();}
-function disableScroll(){
-    document.body.addEventListener('touchmove', preventDefault, { passive: false });
-}
-function enableScroll(){
-    document.body.removeEventListener('touchmove', preventDefault, { passive: false });
-}
-disableScroll();
+            computerChoice = computerDecision();
+            round++;
 
-// https://www.theodinproject.com/courses/javascript-and-jquery/lessons/jquery-and-the-dom
+            // Set Choices
+            $('.player-choice-icon').attr('class', 'player-choice-icon ' + playerChoice);
+            $('.computer-choice-icon').attr('class', 'computer-choice-icon ' + computerChoice);
+
+            winner = decideWinner(playerChoice, computerChoice);
+
+            // Set the values on the screen
+            setValues(playerChoice, computerChoice, winner);
+
+        }
+
+        // Sets all the values on the board
+        function setValues(playerChoice, computerChoice, winnerText) {
+
+            $('.player-choice').text(playerChoice); // If the player has chosen rock, paper or scissors
+            $('.computer-choice').text(computerChoice); // If the computer has chosen rock, paper or scissors
+            $('.winner').text(winnerText); // Who won the round
+
+            // If the game has been reset set the score immediately
+            if(round !== 1) {
+
+                // Set the values once the animation has finished
+                setTimeout(function(){
+                    setScore();
+                }, 4000);
+
+            } else {
+
+                // Set the values immediately
+                setScore();
+                $('.round').text(round);
+
+            }
+
+        }
+
+        // Set the scores
+        function setScore() {
+
+            $('.player-score').text(playerScore); // The running score for the player
+            $('.computer-score').text(computerScore); // The running score for the computer
+
+        }
+
+        // Decide who wins based on the player & computer choice
+        function decideWinner(playerChoice, computerChoice) {
+
+            var resultClass;
+
+            // Who wins, What text is shown & What class is applied to the result screen
+            if (playerChoice === computerChoice) {
+
+                // If there is a tie
+                winner = tieText;
+                resultClass = "tie";
+
+            } else if (playerChoice === "rock") {
+
+                // If the player chooses "Rock"
+                switch (computerChoice) {
+                    case "scissors":
+                        winner = playerWinsText;
+                        playerScore++;
+                        resultClass = "win";
+                    break;
+                    case "paper":
+                        winner = computerWinsText;
+                        computerScore++;
+                        resultClass = "lose";
+                    break;
+                }
+
+            }  else if (playerChoice === "paper") {
+
+                // If the player chooses "Paper"
+                switch (computerChoice) {
+                    case "rock":
+                        winner = playerWinsText;
+                        playerScore++;
+                        resultClass = "win";
+                    break;
+                    case "scissors":
+                        winner = computerWinsText;
+                        computerScore++;
+                        resultClass = "lose";
+                    break;
+
+                }
+
+            } else {
+
+                // If the player chooses "Scissors"
+                switch (computerChoice) {
+                    case "rock":
+                        winner = computerWinsText;
+                        computerScore++;
+                        resultClass = "lose";
+                    break;
+                    case "paper":
+                        winner = playerWinsText;
+                        playerScore++;
+                        resultClass = "win";
+                    break;
+                }
+
+            }
+
+            // Set the class of the result screen
+            $('.result').attr('class', 'result ' + resultClass);
+
+            return winner;
+
+        }
+
+        // Set all variables to their base values
+        function resetGame () {
+
+            playerChoice = "";
+            computerChoice = "";
+            winner = "";
+            round = 1;
+            playerScore = 0;
+            computerScore = 0;
+
+            setValues();
+
+            $('body').removeClass('end-game weapon-chosen');
+            $('.play-again').show();
+
+        }
+
+        // Decide on who is the winner of the whole game
+        function overallWinner() {
+
+            if (playerScore > computerScore) {
+
+                // Player wins
+                overallResultText = overallPlayerWinText;
+                overallResultClass = "win";
+
+            } else if (playerScore < computerScore) {
+
+                // Computer wins
+                overallResultText = overallComputerWinText;
+                overallResultClass = "lose";
+
+            } else {
+
+                // Tie
+                overallResultText = overallTieText;
+                overallResultClass = "tie";
+
+            }
+
+            $('.end-result').html(overallResultText);
+            $('.end-screen').attr('class', 'end-screen ' + overallResultClass);
+
+        }
+
+        // Show the end screen and final result
+        function endGame() {
+
+            $('body').addClass('end-game');
+            $('.play-again').hide();
+
+            overallWinner();
+
+        }
+
+        // Set the total number of rounds
+        function setBestOf(selectedRounds) {
+          
+            var endScreenRounds;
+
+            bestOf = selectedRounds.data('rounds');
+            $('.best-of').text(bestOf);
+
+            // Set the active class on the number of rounds on the end screen
+            endScreenRounds = ".rounds-" + bestOf;
+            $(endScreenRounds).addClass('active').siblings().removeClass('active');
+
+        }
+
+        // Start
+        $('.start').on('click', function(e) {
+
+            e.preventDefault();
+            nextScreen($(this));
+
+        });
+
+        // Set what character is chosen and start the game
+        $('.choose-rounds li').on('click', function(e) {
+
+            e.preventDefault();
+            setBestOf($(this));
+            nextScreen($(this));
+
+        });
+
+        // Set what character is chosen and start the game
+        $('.choose-character li').on('click', function(e) {
+
+            e.preventDefault();
+            setCharacter($(this), '.player-character');
+            nextScreen($(this));
+
+        });
+
+        // Set what character is chosen and start the game
+        $('.choose-rival li').on('click', function(e) {
+
+            e.preventDefault();
+            setCharacter($(this), '.computer-character');
+            $('body').addClass('game-started');
+
+        });
+
+        // Play the game
+        $('.weapon li').on('click', function(e) {
+
+            e.preventDefault();
+            playerChoice = $(this).data('weapon');
+
+            $('body').addClass('weapon-chosen');
+
+            playGame(playerChoice);
+
+            if (round > bestOf) {
+
+                endGame();
+
+            }
+
+        });
+
+        // Play the next round
+        $('.play-again').on('click', function(e) {
+
+            e.preventDefault();
+            $('body').removeClass('weapon-chosen');
+            $('.round').text(round); // How many rounds there have been
+
+        });
+
+        // Reset the game from the beginning
+        $('.reset').on('click', function(e) {
+
+            e.preventDefault();
+            resetGame();
+
+        });
+
+        // Reset the game from the beginning
+        $('.rounds-end-screen li').on('click', function(e) {
+
+            e.preventDefault();
+            setBestOf($(this));
+
+        });
+
+    });
+
+}());
