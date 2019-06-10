@@ -40,3 +40,5 @@ def logout(request):
 
 def game(request):
     return render(request,'mainapp/Game.html')
+def ladder(request):
+    return render(request,'mainapp/snakeladder.html')

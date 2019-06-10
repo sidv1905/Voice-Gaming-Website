@@ -50,7 +50,8 @@
          
         </div>
         <div class="row center">
-          <a href="{% url 'game' %}" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Play Game</a>
+          <a href="{% url 'game' %}" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Play Rock paper scissor</a>
+          <a href="{% url 'ladder' %}" id="download-button2" class="btn-large waves-effect waves-light teal lighten-1">Play Snake and ladder</a>
         </div>
         <br><br>
 
@@ -210,9 +211,17 @@
       {
         document.getElementById("registerkar").click(); 
       }
-      else if(color=='play'|| color==' play'|| color=="play game")
+      else if(color=='play Rock paper scissor'|| color==' play rock paper scissor'|| color==" play Rock paper scissor")
       {
         document.getElementById("download-button").click(); 
+      }
+      else if(color=='play snake and ladder'|| color==' play snake and ladder'|| color=="play snake")
+      {
+        document.getElementById("download-button2").click(); 
+      }
+      else if(color=='back' || color==' back')
+      {
+        window.history.back();
       }
       
     
